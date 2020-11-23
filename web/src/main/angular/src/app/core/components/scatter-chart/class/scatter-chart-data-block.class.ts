@@ -20,6 +20,7 @@ export class ScatterChartDataBlock {
     private transactionData: number[][];
 
     private agentList: string[] = [];
+    private agentDict: {[key: string]: boolean} = {};
     private transactionDataByAgent: {[key: string]: any} = {};
     private countByType: {[key: string]: {[key: string]: number}} = {};
 
@@ -63,8 +64,9 @@ export class ScatterChartDataBlock {
             this.typeManager.getTypeNameList().forEach((typeName: string) => {
                 this.countByType[agentName][typeName] = 0;
             });
-            if (this.agentList.indexOf(agentName) === -1) {
+            if (!this.agentDict[agentName]) {
                 this.agentList.push(agentName);
+                this.agentDict[agentName] = true;
             }
         });
         this.agentList.sort();

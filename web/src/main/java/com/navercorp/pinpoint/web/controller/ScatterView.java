@@ -1,5 +1,6 @@
 package com.navercorp.pinpoint.web.controller;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import com.navercorp.pinpoint.web.scatter.ScatterData;
 import com.navercorp.pinpoint.web.vo.Range;
@@ -24,6 +25,7 @@ public class ScatterView {
             this.status = Objects.requireNonNull(status, "status");
         }
 
+        @JsonIgnore
         public DotView getDotView() {
             return dotViewV1;
         }

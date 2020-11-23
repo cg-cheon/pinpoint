@@ -73,6 +73,7 @@ export class ScatterChart {
     private mouseManager: ScatterChartMouseManager;
     private dataBlocks: ScatterChartDataBlock[] = [];
     private agentList: string[] = [];
+    private agentDict: {[key: string]: boolean} = {};
     private selectedAgent = '';
 
     private downloadElement: HTMLElement;
@@ -117,15 +118,15 @@ export class ScatterChart {
     private getTransactionCount(isInit: boolean) {
         const count: {[key: string]: {count: number, checked: boolean}} = {};
         const xRange = this.coordinateManager.getX();
-        // if (isInit) {
-            this.typeManager.getTypeNameList().forEach((typeName: string) => {
-                count[typeName] = {
-                    count: 0,
-                    checked: this.typeManager.isCheckedByName(typeName)
-                };
-            });
+
         if (isInit === false) {
             this.typeManager.getTypeNameList().forEach((typeName: string) => {
+                if (!count[typeName]) {
+                    count[typeName] = {
+                        count: 0,
+                        checked: this.typeManager.isCheckedByName(typeName)
+                    };
+                }
                 count[typeName].count = 0;
                 this.dataBlocks.forEach((dataBlock: ScatterChartDataBlock) => {
                     const dataBlockXRange = dataBlock.getXRange();
@@ -244,6 +245,7 @@ export class ScatterChart {
 
         this.dataBlocks = [];
         this.agentList = [];
+        this.agentDict = {};
         this.axisRenderer.reset();
         this.rendererManager.reset(mode);
         if (typeCheck) {
@@ -253,8 +255,9 @@ export class ScatterChart {
     }
     addAgent(agentList: string[]): void {
         agentList.forEach((agentName: string) => {
-            if (this.agentList.lastIndexOf(agentName) === -1) {
+            if (!this.agentDict[agentName]) {
                 this.agentList.push(agentName);
+                this.agentDict[agentName] = true;
             }
         });
         this.agentList.sort();
